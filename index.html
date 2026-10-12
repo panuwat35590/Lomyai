@@ -1,0 +1,260 @@
+<!DOCTYPE html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>แดชบอร์ดสวนลำไย 5 ไร่ 3D</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+:root{--p:rgba(255,255,255,.84);--f:#1f2d3a;--s:rgba(0,0,0,.12);--cd:rgba(255,255,255,.65)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--p:rgba(16,26,22,.86);--f:#e6efe9;--s:rgba(255,255,255,.16);--cd:rgba(255,255,255,.08)}}
+:root[data-theme="dark"]{--p:rgba(16,26,22,.86);--f:#e6efe9;--s:rgba(255,255,255,.16);--cd:rgba(255,255,255,.08)}
+*,*::before,*::after{box-sizing:border-box}.font-bold{font-weight:700}.text-sm{font-size:14px;line-height:1.25}
+html,body{height:100%;margin:0;overflow:hidden;background:#e6f2dc;font-family:'Sarabun','Loma',sans-serif;color:var(--f)}
+#c{position:fixed;inset:0;touch-action:none}#c canvas{display:block}
+.top{position:fixed;top:0;left:0;right:0;padding:calc(env(safe-area-inset-top,0px) + 8px) 10px 0;pointer-events:none}
+.top>*{pointer-events:auto}
+.hd{background:var(--p);backdrop-filter:blur(10px);border-radius:14px;padding:8px 10px;color:var(--f)}
+#st{display:flex;gap:5px;overflow-x:auto;padding:6px 0 2px}
+.mb{flex:0 0 auto;min-width:46px;padding:5px 6px;border-radius:10px;border:1px solid var(--s);background:var(--cd);color:var(--f);font:600 13px Sarabun,Loma,sans-serif;text-align:center}
+.mb.on{background:#e65100;color:#fff;border-color:#e65100}
+.dg,.db,.dr{display:inline-block;width:6px;height:6px;border-radius:50%;margin:0 1px}.dg{background:#2e7d32}.db{background:#0288d1}.dr{background:#c62828}
+#chip,#al{display:inline-block;margin-top:6px;padding:5px 11px;border-radius:14px;color:#fff;font-weight:700;font-size:13px;pointer-events:none}
+#pn{position:fixed;left:0;right:0;bottom:0;height:46vh;background:var(--p);backdrop-filter:blur(14px);border-radius:20px 20px 0 0;display:flex;flex-direction:column;padding:6px 12px calc(env(safe-area-inset-bottom,0px) + 8px);box-shadow:0 -6px 24px rgba(0,0,0,.15);transition:height .25s}
+#pn.min{height:96px}#pn.min #bd{display:none}
+.hl{width:44px;height:5px;border-radius:3px;background:var(--s);margin:0 auto 6px;border:0;padding:0}
+#tb{display:flex;gap:5px}.tb{flex:1;padding:6px 4px;border-radius:10px;border:1px solid var(--s);background:var(--cd);color:var(--f);font:600 12px Sarabun,Loma,sans-serif}.tb.on{background:#1b5e20;color:#fff}
+#bd{overflow-y:auto;margin-top:8px;font-size:13px;line-height:1.5}
+h2{font-size:14px;margin:0 0 6px;font-weight:700}
+.bx{border-radius:10px;padding:8px 10px;margin-bottom:7px;border-left:4px solid;background:var(--cd)}
+.bx.g{border-color:#2e7d32}.bx.b{border-color:#0288d1}.bx.r{border-color:#c62828}.bx.o{border-color:#e65100}.bx.w{border-color:#4fc3f7}
+.bx ul{margin:2px 0 0;padding-left:18px}
+.tg{display:inline-block;margin:3px 3px 0 0;padding:2px 8px;border-radius:9px;font-size:12px;color:#fff}.tg.b{background:#0288d1}.tg.g{background:#2e7d32}
+table{width:100%;border-collapse:collapse;font-size:12px}td{border:1px solid var(--s);padding:5px 6px;vertical-align:top}
+.or{color:#e65100;font-weight:700}.gr{color:#2e7d32;font-weight:700}.bl{color:#0288d1;font-weight:700}
+.mxr{display:flex;align-items:flex-end;justify-content:center;gap:14px;margin:6px 0}
+.bk{position:relative;width:84px;height:84px;border:3px solid #78909c;border-radius:4px 4px 14px 14px;overflow:hidden;opacity:.25;transition:transform .8s,opacity .4s;background:var(--cd)}
+.bk::after{content:'ถังเล็ก';position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:10px}
+.bk.on{opacity:1}.bk.pour{transform:rotate(55deg) translate(18px,-8px)}
+.tk{position:relative;width:150px;height:190px;border:3px solid #546e7a;border-radius:6px 6px 22px 22px;overflow:hidden;background:var(--cd)}
+.wl{position:absolute;left:0;right:0;bottom:0;height:0;background:rgba(79,195,247,.65);transition:height 1.6s,background 1s}
+.wv{position:absolute;top:6px;left:0;right:0;text-align:center;font-weight:700;font-size:12px;z-index:2}
+.sr{position:absolute;left:50%;bottom:18px;margin-left:-14px;font-size:28px;z-index:1;animation:sp 1s linear infinite;opacity:0}.sr.on{opacity:.8}.sr.slow{animation-duration:4s}
+@keyframes sp{to{transform:rotate(360deg)}}
+.dc{position:absolute;top:0;padding:2px 6px;border-radius:8px;color:#fff;font-size:10px;white-space:nowrap;animation:dp 1.3s ease-in forwards;z-index:3}
+.bk .dc{animation-name:dpb}
+@keyframes dp{0%{transform:translateY(-30px);opacity:0}15%{opacity:1}100%{transform:translateY(130px);opacity:0}}
+@keyframes dpb{0%{transform:translateY(-20px);opacity:0}15%{opacity:1}100%{transform:translateY(55px);opacity:0}}
+.sl li{list-style:none;padding:4px 8px;border-radius:8px;margin-bottom:3px;background:var(--cd);opacity:.55}.sl li.on{opacity:1;outline:2px solid #e65100}.sl li.dn{opacity:1;border-left:4px solid #2e7d32}
+#sl{display:none;position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);background:var(--p);backdrop-filter:blur(14px);border-radius:18px;padding:12px 14px;box-shadow:0 6px 24px rgba(0,0,0,.2);color:var(--f)}
+.sm #sl{display:block}
+#vw .mb:not([data-v="s"]){display:none}#ac{display:none!important}
+#ac{display:none;position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 106px);background:var(--p);backdrop-filter:blur(14px);border-radius:16px;padding:10px 14px;box-shadow:0 6px 24px rgba(0,0,0,.18);color:var(--f);font-size:13px;line-height:1.5}#ac h2{font-size:16px;display:flex;justify-content:space-between;gap:8px}#ac ul{margin:4px 0 0;padding-left:18px}#ac button{border:0;background:var(--cd);color:var(--f);border-radius:8px;padding:2px 10px;font-size:13px}.sm #ac{display:none!important}
+@media(min-width:768px){#ac{right:auto;left:20px;bottom:20px;width:420px}}.sm .hd,.sm #vw,.sm #pn{display:none}
+#sl h2{font-size:17px}#sl ul{margin:6px 0 8px;padding-left:18px;font-size:14px;line-height:1.55}.sn{display:flex;gap:6px;align-items:center}.sn .mb{padding:7px 14px}.sd{flex:1;text-align:center;font-size:12px}
+@media(min-width:768px){#sl{right:auto;left:20px;bottom:20px;width:480px}#sl h2{font-size:19px}#sl ul{font-size:15px}}
+@media(min-width:768px){#pn{left:auto;right:12px;top:150px;bottom:12px;width:410px;height:auto;border-radius:20px}#pn.min{bottom:auto}#pn.min #bd,#pn.min #tb{display:none}.hl{width:auto;height:auto;margin:0 auto 6px;padding:4px 14px;border-radius:14px;background:var(--cd);color:var(--f);border:1px solid var(--s);font:600 12px Sarabun,Loma,sans-serif}.hl::after{content:'▼ ย่อหน้าต่าง'}#pn.min .hl::after{content:'▲ เปิดรายละเอียด'}}
+</style></head><body>
+<div id="c"></div>
+<div class="top"><div class="hd"><div class="font-bold text-sm">🌳 แดชบอร์ดบำรุงสวนลำไย 5 ไร่ (~100 ต้น) · สูตรผลผลิตเกรด A</div><div id="st"></div></div>
+<div id="chip"></div><br><div id="al"></div>
+<div id="sq" style="display:flex;gap:5px;overflow-x:auto;margin-top:6px"></div>
+<div id="vw" style="display:flex;gap:5px;overflow-x:auto;margin-top:6px"><button class="mb" style="background:var(--p)" data-v="a">🌐 ภาพรวม</button><button class="mb" style="background:var(--p)" data-v="f">🏠 หน้าสวน</button><button class="mb" style="background:var(--p)" data-v="h">⬆️ หัวแปลง</button><button class="mb" style="background:var(--p)" data-v="m">↔️ กลางแปลง</button><button class="mb" style="background:var(--p)" data-v="e">⬇️ ท้ายแปลง</button><button class="mb" style="background:var(--p)" data-v="t">🌳 ซูมต้นลำไย</button><button class="mb" style="background:var(--p);border-color:#e53935" data-st="s">🌱 ใส่ปุ๋ย</button><button class="mb" style="background:var(--p);border-color:#e53935" data-st="w">💧 รดน้ำ</button><button class="mb" style="background:var(--p);border-color:#e53935" data-st="m">✂️ ตัดหญ้า</button><button class="mb" style="background:var(--p);border-color:#e53935" data-st="d">🚁 โดรนพ่น</button><button class="mb" style="background:var(--p);border-color:#e53935" data-st="x">🧪 ผสมสาร</button><button class="mb" style="background:var(--p);border-color:#e53935" data-st="h">🍇 เก็บเกี่ยว</button><button class="mb" style="background:#e65100;color:#fff" data-v="s">🎞 สไลด์</button></div></div>
+<div id="ac"></div>
+<div id="sl"><div id="sb"></div><div class="sn" style="margin-bottom:6px"><button class="mb" id="ka" style="flex:1">⏮ กิจกรรมก่อนหน้า</button><button class="mb" id="kb" style="flex:1;background:#e65100;color:#fff">ข้ามกิจกรรม ⏭</button></div><div class="sn"><button class="mb" id="sp">◀</button><div class="sd" id="sc"></div><button class="mb" id="sa">⏯</button><button class="mb" id="ss">📜</button><button class="mb" id="sx">✕</button><button class="mb" id="sf" style="background:#e65100;color:#fff">▶</button></div></div>
+<div id="pn"><button class="hl" id="hl" aria-label="ย่อ/ขยาย"></button>
+<div id="tb"><button class="tb on" data-t="0">📅 ปฏิทิน 3D</button><button class="tb" data-t="1">🚁 โดรน</button><button class="tb" data-t="3">🧪 ผสมสาร</button><button class="tb" data-t="2">💰 งบ</button></div>
+<div id="bd"></div></div>
+<script>
+const M=[
+{s:'ม.ค.',n:'มกราคม',t:'ตัดแต่ง & ดันใบชุดที่ 1',r:1,d:'10-15 ม.ค.',so:'15-0-0 (1 กก./ต้น) + ฮิวมิกผง 100 ก./ต้น (รวมเดือนนี้ 10 กก.) + ปุ๋ยอินทรีย์อัดเม็ด 1.5 กก./ต้น',pc:'#f59e0b',fo:['29-9-9 (1 กก.)','แมกนีเซียมซัลเฟต 0.3 กก.','สาหร่าย+อะมิโน 150-200cc','อิมิดาโคลพริด 70-80 ก.','แคลเซียม-โบรอน 150-200cc','สารจับใบ 40-50cc'],w:'รดโชกทันทีหลังใส่ปุ๋ย แล้ว 2-3 วัน/ครั้ง ครั้งละ 30-45 นาที',wa:['เพลี้ยไฟ/หนอนคัดยอด: ยอดกุด ใบหงิก รีบพ่นรอบ 1','เพลี้ยไก่แจ้ช่วงแทงยอดแดง','อากาศแล้ง ห้ามขาดน้ำ ยอดจะชะงัก']},
+{s:'ก.พ.',n:'กุมภาพันธ์',t:'ใบชุด 1 แก่ / เร่งใบชุด 2',r:2,d:'15-20 ก.พ.',so:'16-16-16 (0.5 กก./ต้น) + 15-0-0 (0.5 กก./ต้น)',pc:'#f59e0b',fo:['29-9-9 (1 กก.)','แมกนีเซียมซัลเฟต 0.3 กก.','สาหร่าย+อะมิโน 150-200cc','ฟลอนิคาคิด 70-100 ก.','คอร์เฟนาเพอร์ 150-200cc','สารจับใบ 40-50cc'],w:'ทุก 3 วัน ครั้งละ 30-40 นาที เพื่อดันยอดชุด 2',wa:['เพลี้ยไฟ & ไรแดง ระบาดช่วงลมแล้ง','หนอนกัดกินใบเพสลาด ใช้คอร์เฟนาเพอร์น็อกทันที']},
+{s:'มี.ค.',n:'มีนาคม',t:'ใบชุด 2 เพสลาด / เริ่มสะสมอาหาร',r:3,d:'12-16 มี.ค.',so:'16-16-16 (0.5-1 กก./ต้น) กลางเดือน',pc:'#f59e0b',fo:['0-52-34 (2 กก.)','สาหร่าย+อะมิโน 150-200cc','ฟลอนิคาคิด 70-80 ก.','ลูเฟนูรอน 100-150cc (คุมไข่หนอน 15 วัน)','อีมาเมกติน 100 ก.','สารจับใบ 40-50cc'],w:'ทุก 3-4 วัน ครั้งละ 30-40 นาที',wa:['อากาศร้อนจัด รักษาความชื้นหน้าดิน','ฝนหลงฤดู: 0-52-34 (2 กก.) ช่วยบล็อกยอดหลง']},
+{s:'เม.ย.',n:'เมษายน',t:'สะสมตาดอก & กักน้ำ',r:4,d:'10-15 เม.ย.',so:'8-24-24 (1.5 กก./ต้น) ต้นเดือน',pc:'#f59e0b',dr:1,fo:['0-52-34 (2 กก.)','ฟลอนิคาคิด 70-80 ก.','อีมาเมกติน 100 ก.','ลูเฟนูรอน 100-150cc','สารจับใบ 40-50cc'],w:'ต้นเดือนรดปกติ | ปลายเดือน งดน้ำ 10-14 วัน (ขั้นต่ำ 10 วัน)',wa:['ร้อนจัด งดราดสารเดือนนี้','ฝนหลงฤดูช่วงกักน้ำ: อัด 0-52-34 (2 กก.) ซ้ำเพื่อบล็อกยอด']},
+{s:'พ.ค.',n:'พฤษภาคม',t:'ราดสารกระตุ้นออกดอก',r:0,d:'',so:'สารราดทางดิน (โซเดียม/โพแทสเซียมคลอเรต) 0.5 กก./ต้น วันที่ 1-5 พ.ค. แล้วรดน้ำตาม',pc:'#ede7f6',chem:1,fo:[],w:'รดโชกวันราดสาร 45-60 นาที แล้วคุมชื้นปานกลาง ห้ามปล่อยแห้ง',wa:['งดพ่นทางใบ — พักต้น','ห้ามใส่ปุ๋ยตัวหน้าสูง (N) หรืออะมิโน เพราะล้างฤทธิ์สารราด']},
+{s:'มิ.ย.',n:'มิถุนายน',t:'แทงช่อดอก',r:5,d:'สัปดาห์ที่ 2 (ก่อนดอกบาน)',so:'',fo:['6-24-6 200-250cc','ซิงค์ผง 100-150 ก.','สาหร่าย+อะมิโน 150-200cc','อีมาเมกติน 100 ก.','คาร์เบนดาซิม 150 ก.','สารจับใบ 40-50cc'],w:'ทุก 3-4 วัน ครั้งละ 30 นาที ห้ามขาดน้ำช่วงแทงช่อ',bee:1,wa:['ราแป้ง & ช่อดอกแห้งเน่า: พ่นคาร์เบนดาซิมก่อนดอกบาน','หนอนกินช่อดอก: ผสมอีมาเมกติน','🐝 ช่วงดอกบานห้ามพ่นสารเคมีทุกชนิด']},
+{s:'ก.ค.',n:'กรกฎาคม',t:'ดอกบาน & ติดผล',r:0,d:'',so:'ฮิวมิกผง 100 ก. (รวม 10 กก.) + 16-16-16 (0.5-1 กก./ต้น) + ปุ๋ยอินทรีย์อัดเม็ด 1.5 กก./ต้น — ใส่หลังติดผล/สลัดกลีบดอกแห้งแล้วเท่านั้น',pc:'#6d4c41',fo:[],w:'ทุก 3-4 วัน ครั้งละ 30 นาที',bee:1,wa:['🐝 ห้ามพ่นสารเคมีช่วงดอกบาน — ปกป้องเกสรและผึ้ง']},
+{s:'ส.ค.',n:'สิงหาคม',t:'ขยายผล & สร้างเปลือก',r:6,d:'5-10 ส.ค.',so:'ปลายเดือน: 13-13-21 (0.75 กก./ต้น) + ฮิวมิกผง 50 ก./ต้น (รวมเดือนนี้ 5 กก.)',pc:'#f59e0b',fo:['13-0-46 (1 กก.)','แมกนีเซียมซัลเฟต 0.4 กก. + สาหร่าย/อะมิโน','แคลเซียม-โบรอน 150-200cc','ลูเฟนูรอน 100-150cc','ไดฟีโนโคนาโซล+อะซอกซีสโตรบิน 150cc','สารจับใบ 40-50cc'],w:'ทุก 3-4 วัน ครั้งละ 35-45 นาที คุมความชื้นให้คงที่',wa:['ผลแตกจากน้ำมากกะทันหัน: เสริมแคลเซียม-โบรอน','ผลเน่า/ราดำ: พ่นกลุ่ม 3+11 คุมล่วงหน้า']},
+{s:'ก.ย.',n:'กันยายน',t:'สร้างเนื้อ เร่งหวาน',r:7,d:'ปลาย ก.ย. - ก่อน 15 ต.ค.',so:'',fo:['13-0-46 (1 กก.)','สาหร่าย+อะมิโน+แคลเซียม-โบรอน 150cc','ไดฟีโน+อะซอกซี 150cc','อีมาเมกติน 100 ก.','สารจับใบ 40-50cc'],w:'ทุก 4-5 วัน ครั้งละ 30-40 นาที ระวังน้ำขังโคนต้น',wa:['หนอนเจาะขั้วผล/ผีเสื้อมวนหวาน: คุมในรอบ 7','รอบ 7 คือรอบสุดท้ายก่อน 15 ต.ค.']},
+{s:'ต.ค.',n:'ตุลาคม',t:'เร่งหวาน & เข้าระยะ PHI',r:0,d:'',so:'ปลายเดือน: 13-13-21 (0.75 กก./ต้น)',pc:'#f59e0b',phi:1,fo:[],w:'ทุก 4-5 วัน ครั้งละ 30-40 นาที',wa:['⛔ หลัง 15 ต.ค. หยุดพ่นสารเคมีทุกชนิด (PHI) เพื่อไม่ให้มีสารตกค้าง']},
+{s:'พ.ย.',n:'พฤศจิกายน',t:'พักต้น — ระยะปลอดภัย PHI',r:0,d:'',so:'',fo:[],w:'ทุก 4-5 วัน ตามปกติ',phi:1,wa:['⛔ งดพ่นเคมีทุกชนิด รอเก็บเกี่ยว']},
+{s:'ธ.ค.',n:'ธันวาคม (- มกราคม)',t:'🍇 เก็บเกี่ยวผลผลิต',r:0,d:'',so:'',fo:[],w:'ลด/หยุดน้ำก่อนเก็บเกี่ยว 7-10 วัน เพื่อเพิ่มความหวาน',hv:1,wa:['งดปุ๋ยและสารเคมีทุกชนิด 100%','ค้างคาว & นก: ติดตาข่ายหรือไฟไล่ 1-2 สัปดาห์ก่อนเก็บเกี่ยว','ผลโต ผิวตึง สีน้ำตาลทอง หวานกรอบ']}];
+const $=i=>document.getElementById(i);
+/* ---------- UI ---------- */
+$('st').innerHTML=M.map((m,i)=>`<button class="mb" data-m="${i}">${m.s}<br>${m.so?'<i class="dg"></i>':''}${m.r?'<i class="db"></i>':''}${m.bee||m.phi?'<i class="dr"></i>':''}</button>`).join('');
+const ch=(a,c)=>a.map(x=>`<span class="tg ${c}">${x}</span>`).join('');
+function tab0(m){return `<h2>📅 ปฏิทินปฏิบัติงาน 3D (อนิเมชั่นใส่ปุ๋ยทางดิน & พ่นทางใบ)</h2><div class="bx o"><b>${m.n}</b> · ${m.t}</div>`+
+(m.so?`<div class="bx g"><b>🌱 ปุ๋ยทางดิน</b><br>${m.so}</div>`:`<div class="bx g">🌱 เดือนนี้ไม่มีการใส่ปุ๋ยทางดิน</div>`)+
+(m.r?`<div class="bx b"><b>🚁 โดรนรอบบินที่ ${m.r}</b> · ${m.d}<div>${ch(m.fo,'b')}</div></div>`:`<div class="bx b">🚁 เดือนนี้ไม่มีรอบบินพ่นทางใบ</div>`)+
+`<div class="bx w"><b>💧 การให้น้ำ</b><br>${m.w}</div><div class="bx r"><b>⚠ จุดเฝ้าระวัง</b><ul>${m.wa.map(x=>`<li>${x}</li>`).join('')}</ul></div>`}
+const tab1=()=>`<h2>🚁 พารามิเตอร์โดรน T25P (30 ลิตร/ไร่)</h2><table>
+<tr><td>อัตราพ่น</td><td class="bl">30 ลิตร/ไร่ (150 ลิตร/รอบ 5 ไร่)</td></tr><tr><td>ความสูง</td><td>2.5-3.0 ม. เหนือทรงพุ่ม</td></tr><tr><td>ความเร็ว</td><td>2.0-2.5 ม./วินาที</td></tr><tr><td>แนวบิน</td><td class="gr">กึ่งกลางแนวร่องแถวต้น (Center-line)</td></tr><tr><td>ละอองน้ำยา</td><td>150-200 ไมครอน</td></tr><tr><td>ค่าบริการ</td><td class="or">200 บ./ไร่ (1,000 บ./รอบ) × 7 รอบ = 7,000 บ.</td></tr></table>
+<h2 style="margin-top:10px">🧪 ลำดับผสมสารลงถัง (150 ลิตร)</h2><div class="bx o"><ol style="margin:0;padding-left:18px"><li>เติมน้ำครึ่งถัง เปิดกวนเบาๆ</li><li>ละลายปุ๋ยเกล็ดผงนอกถังให้หมดก่อนเทลงถังใหญ่</li><li>ใส่สารกำจัดแมลง/โรคพืช</li><li>ใส่ธาตุอาหารเสริม (แคลเซียม-โบรอน, สาหร่าย/อะมิโน)</li><li>เติมน้ำให้ครบ 150 ลิตร</li><li><b>สารจับใบ (Super Spreader) 40-50cc ใส่เป็นอย่างสุดท้าย</b> ลดการกวนเพื่อกันฟองล้น</li></ol></div>`;
+const tab2=()=>`<h2>💰 สรุปงบประมาณ & จุดคุ้มทุน</h2><table>
+<tr><td>ค่าเช่าสวน (7,000 บ./ไร่)</td><td class="or">35,000</td></tr><tr><td>ปุ๋ยทางดิน/ฮิวมิก/อินทรีย์/สารราด</td><td>22,950 - 24,550</td></tr><tr><td>ปุ๋ยเกล็ด/เคมีภัณฑ์ทางใบ</td><td class="bl">6,150</td></tr><tr><td>โดรน T25P 7 รอบ</td><td>7,000</td></tr><tr><td>ค่าแรง/ค่าแฝง/งบสำรอง</td><td>~8,000 - 9,000</td></tr><tr><td><b>ไม่รวมค่าเช่า</b></td><td class="bl">36,100 - 37,700</td></tr><tr><td><b>ต้นทุนรวมทั้งหมด</b></td><td class="or">79,100 - 81,700</td></tr><tr><td>เฉลี่ยต่อไร่</td><td class="gr">15,820 - 16,340 บ.</td></tr></table>
+<div class="bx o" style="margin-top:8px"><b>📊 จุดคุ้มทุน</b><br>• ขาย 30 บ./กก. → มากกว่า <b>2,637 - 2,723 กก.</b><br>• ขาย 20 บ./กก. → มากกว่า <b>3,955 - 4,085 กก.</b><br>เป้าผลผลิต 5,500 - 7,500 กก. กำไรสุทธิหลังหักค่าเช่า ~55,000 - 148,000 บ./ปี</div>
+<div class="bx g"><b>🌱 ฮิวมิกผง 25 กก.:</b> ม.ค. 10 · ก.ค. 10 · ส.ค. 5 กก.<br><b>ปุ๋ยอินทรีย์อัดเม็ด:</b> 2-3 กก./ต้น (8-12 กระสอบ/ปี) ใส่ ม.ค. และ มิ.ย.-ก.ค.</div>`;
+let mxT=[];const mxStop=()=>{mxT.forEach(clearTimeout);mxT=[]};
+const MXS=['เติมน้ำสะอาดครึ่งถัง (75 ลิตร) เปิดระบบกวนเบาๆ','ละลายปุ๋ยเกล็ดผงในถังเล็กด้านนอกจนหมด แล้วเทลงถังใหญ่','ใส่สารกำจัดแมลง/ยาป้องกันรักษาโรคพืช','ใส่ธาตุอาหารเสริม/ธาตุอาหารรอง (แคลเซียม-โบรอน, สาหร่าย/อะมิโน ฯลฯ)','เติมน้ำสะอาดจนครบ 150 ลิตร','ใส่สารจับใบ (Super Spreader) เป็นอย่างสุดท้าย ลดการกวนกันฟองล้นถัง'],MXC=['#2e7d32','#c62828','#e65100','#0288d1'],MXL=[0,1,2,2,0,3];
+function mxG(m){const g=[[],[],[],[]];m.fo.forEach(x=>g[/สารจับใบ/.test(x)?3:/^(29|0-52|13-0|แมกนี|ซิงค์)/.test(x)?0:/(อิมิดา|ฟลอนิ|คอร์เฟ|อีมา|ลูเฟน|คาร์เบน|ไดฟี)/.test(x)?1:2].push(x));return g}
+function tab3(m){if(!m.r)return `<h2>🧪 อนิเมชันผสมสาร</h2><div class="bx r">${m.n}ไม่มีรอบบินพ่นทางใบ — เลือกเดือนที่มีรอบบิน (ม.ค.-เม.ย., มิ.ย., ส.ค., ก.ย.)</div>`;
+const g=mxG(m);
+return `<h2>🧪 ผสมสารลงถัง · รอบบินที่ ${m.r} (${m.n}) · น้ำ 150 ลิตร</h2><div class="mxr"><div class="bk" id="mxb"></div><div class="tk" id="mxk"><div class="wv" id="mxv">0 ลิตร</div><div class="wl" id="mxw"></div><div class="sr" id="mxs">✱</div></div></div><div style="text-align:center;margin-bottom:6px"><button class="tb on" style="flex:none;padding:6px 16px" onclick="mxPlay()">▶ เล่นซ้ำ</button></div><ol class="sl" id="mxl" style="padding:0;margin:0">${MXS.map((s,i)=>`<li><b>${i+1}.</b> ${s}${i==0||i==4?'':'<div>'+(g[MXL[i]].length?g[MXL[i]].map(x=>`<span class="tg" style="background:${MXC[MXL[i]]}">${x}</span>`).join(''):'<small>— ไม่มีรายการในรอบนี้</small>')+'</div>'}</li>`).join('')}</ol><div class="bx o" style="margin-top:6px">ผสมรวม 150 ลิตร/รอบบิน 5 ไร่ แล้วแบ่งขึ้นบินตามความจุถัง (T25P 25 ลิตร ≈ 6 ถัง/รอบ)</div>`}
+function mxPlay(){mxStop();const m=M[mi];if(!m.r||!$('mxw'))return;const g=mxG(m),w=$('mxw'),v=$('mxv'),k=$('mxk'),b=$('mxb'),s=$('mxs'),li=[...$('mxl').children];
+mx3=0;mxS=0;liqM.color.set(0x4aa8ff);w.style.transition='none';w.style.height='0';w.style.background='rgba(79,195,247,.65)';v.textContent='0 ลิตร';b.className='bk';b.innerHTML='';s.className='sr';li.forEach(x=>x.className='');k.querySelectorAll('.dc').forEach(x=>x.remove());void w.offsetHeight;w.style.transition='';
+const at=(t,f)=>mxT.push(setTimeout(f,t*1.6)),lv=(p,l)=>{w.style.height=p+'%';v.textContent=l+' ลิตร';mx3=p/100};
+const drop=(box,txt,c,t)=>at(t,()=>{const e=document.createElement('span');e.className='dc';e.style.background=c;e.style.left=(4+Math.random()*28)+'%';e.textContent=txt;box.appendChild(e);chip3(c);setTimeout(()=>e.remove(),1400)});
+let t=300;
+for(let i=0;i<6;i++){const T=t;at(T,()=>{li.forEach((x,j)=>{x.className=j<i?'dn':j==i?'on':''});if(i==0)s.className='sr on';if(i==5)s.className='sr on slow'});
+const it=i==0||i==4?[]:g[MXL[i]],n=it.length;
+if(i==0){at(T+300,()=>lv(50,75));t+=2600}
+else if(i==1){at(T,()=>b.classList.add('on'));it.forEach((x,j)=>drop(b,x,MXC[0],T+400+j*700));const e=T+400+n*700+800;if(n){at(e,()=>b.classList.add('pour'));at(e+900,()=>{w.style.background='rgba(129,199,132,.75)';b.className='bk'})}t=e+(n?2000:600)}
+else if(i==4){at(T+300,()=>lv(100,150));t+=2600}
+else{it.forEach((x,j)=>drop(k,x,MXC[MXL[i]],T+300+j*700));if(i==2)at(T+400+n*700,()=>w.style.background='rgba(255,138,101,.7)');if(i==3)at(T+400+n*700,()=>w.style.background='rgba(255,213,79,.7)');t=T+300+n*700+1500}}
+at(t,()=>{li.forEach(x=>x.className='dn');s.className='sr on slow'})}
+let tab=0,mi=0;
+function panel(){mxStop();$('bd').innerHTML=tab==0?tab0(M[mi]):tab==1?tab1():tab==2?tab2():tab3(M[mi]);$('bd').scrollTop=0;if(tab==3)mxPlay();document.querySelectorAll('.tb').forEach(b=>b.classList.toggle('on',+b.dataset.t==tab))}
+$('tb').onclick=e=>{const b=e.target.closest('.tb');if(b){tab=+b.dataset.t;panel();$('pn').classList.remove('min')}};
+$('hl').onclick=()=>$('pn').classList.toggle('min');
+$('st').onclick=e=>{const b=e.target.closest('.mb');if(b){if(tab!=3)tab=0;setMonth(+b.dataset.m)}};
+/* ---------- 3D ---------- */
+const S=new THREE.Scene();S.background=new THREE.Color(0xe6f2dc);S.fog=new THREE.Fog(0xe6f2dc,30,70);
+const cam=new THREE.PerspectiveCamera(45,1,.1,120),R=new THREE.WebGLRenderer({antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));$('c').appendChild(R.domElement);
+S.add(new THREE.HemisphereLight(0xffffff,0x88aa88,.65));const dl=new THREE.DirectionalLight(0xffffff,.55);dl.position.set(6,12,8);S.add(dl);
+let az=0,azT=0,el=.9,elT=.9,tz=0,tzT=0,tx=0,txT=0,dist=19,zoomK=1,zT=1;const cl=(v,a,b)=>Math.min(b,Math.max(a,v));
+function resize(){const w=innerWidth,h=innerHeight;R.setSize(w,h);cam.aspect=w/h;const mob=w<768;mob?cam.setViewOffset(w,h,0,h*.22,w,h):cam.setViewOffset(w,h,w*.14,0,w,h)}
+addEventListener('resize',resize);
+const cv=$('c'),ptr=new Map();
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptr.set(e.pointerId,{x:e.clientX,y:e.clientY})});
+cv.addEventListener('pointermove',e=>{const p=ptr.get(e.pointerId);if(!p)return;const dx=e.clientX-p.x,dy=e.clientY-p.y;
+if(ptr.size==1){azT-=dx*.006;elT=cl(elT+dy*.005,.2,2.2)}
+else if(ptr.size==2){const o=[...ptr.entries()].find(a=>a[0]!=e.pointerId)[1],d0=Math.hypot(p.x-o.x,p.y-o.y),d1=Math.hypot(e.clientX-o.x,e.clientY-o.y);if(d1>5)zT=cl(zT*d0/d1,.12,1.6);tzT=cl(tzT-dy*.02*zT*(innerWidth<768?1.4:1),-14,14)}
+p.x=e.clientX;p.y=e.clientY});
+['pointerup','pointercancel'].forEach(n=>cv.addEventListener(n,e=>ptr.delete(e.pointerId)));
+const VW={x:[.5,.55,8,.22,9],d:[-.4,.5,11,.2,8],a:[0,.9,0,1],f:[0,.4,9,.35],h:[.6,.5,6,.22],m:[0,.5,0,.3],e:[.4,.6,-9,.3],t:[1.2,.5,3,.28]};
+$('vw').onclick=e=>{const b=e.target.closest('button');if(b){if(b.dataset.st)stSel(b.dataset.st);else{stn='';acHide();setChip();if(b.dataset.v=='s')slOpen(true);else[azT,elT,tzT,zT,txT=0]=VW[b.dataset.v]}}};
+
+$('c').addEventListener('wheel',e=>{zT=cl(zT*(1+e.deltaY*.001),.12,1.6)},{passive:true});
+const gm=new THREE.MeshLambertMaterial({color:0x9ad88a});const gnd=new THREE.Mesh(new THREE.PlaneGeometry(60,44),gm);gnd.rotation.x=-Math.PI/2;S.add(gnd);
+const cM=new THREE.MeshPhongMaterial({color:0x43a047,flatShading:true,shininess:0}),fM=new THREE.MeshLambertMaterial({color:0xd9a21b}),flM=new THREE.MeshLambertMaterial({color:0xffffff}),tM=new THREE.MeshLambertMaterial({color:0xc9b79c}),sM=new THREE.MeshLambertMaterial({color:0x9e9e9e});
+const TX=[-4.5,-1.5,1.5,4.5],TZ=[-9,-6,-3,0,3,6,9],trees=[],spr=[];
+const gT=new THREE.CylinderGeometry(.18,.28,1.3,8),gC=new THREE.SphereGeometry(.95,8,6),gF=new THREE.SphereGeometry(.16,8,6),gFl=new THREE.SphereGeometry(.07,6,5),gS=new THREE.CylinderGeometry(.06,.06,.2,6);
+function onC(m,y){const v=new THREE.Vector3(Math.random()-.5,Math.random()-.15,Math.random()-.5).normalize().multiplyScalar(.98);v.y=v.y*.85+2.1;m.position.copy(v)}
+TZ.forEach(z=>TX.forEach(x=>{const g=new THREE.Group();g.position.set(x,0,z);const t=new THREE.Mesh(gT,tM);t.position.y=.65;g.add(t);
+const c=new THREE.Mesh(gC,cM);c.scale.y=.85;c.position.y=2.1;g.add(c);const fm=[],fl=[];
+for(let i=0;i<16;i++){const f=new THREE.Mesh(gF,fM);onC(f);g.add(f);fm.push(f)}
+for(let i=0;i<26;i++){const f=new THREE.Mesh(gFl,flM);onC(f);g.add(f);fl.push(f)}
+S.add(g);trees.push({x,z,fm,fl});const s=new THREE.Mesh(gS,sM);s.position.set(x+1.1,.1,z);S.add(s);spr.push(s.position)}));
+const pad=new THREE.Mesh(new THREE.CylinderGeometry(1,1,.08,20),new THREE.MeshLambertMaterial({color:0x607d8b}));pad.position.set(8,.04,12);S.add(pad);
+const bx=(w,h,d,c,x,y,z)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color:c}));m.position.set(x,y,z);S.add(m)},pl=(w,d,c,x,z,y)=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(w,d),new THREE.MeshLambertMaterial({color:c}));m.rotation.x=-Math.PI/2;m.position.set(x,y||.02,z);S.add(m)};
+pl(12,30,0xb5df9f,-13,0);pl(12,30,0xc4e6ac,13,0);pl(60,4,0x555b61,0,15,.03);pl(60,.25,0xffffff,0,15,.04);pl(3,5,0xb08d63,-8.5,11.5,.035);pl(60,3.2,0x4aa3c7,0,-13.5,.03);
+bx(3,1.6,2.4,0xefe6d8,-8.5,.8,8.5);bx(3.4,.25,2.8,0x90a4ae,-8.5,1.7,8.5);
+const bm=(w,h,d,c,x,y,z)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshLambertMaterial({color:c}));m.position.set(x,y,z);return m},cyl=(r,h,c,y)=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,10),new THREE.MeshLambertMaterial({color:c}));m.position.y=y;return m};
+const wk=new THREE.Group();wk.add(cyl(.28,.9,0xe53935,.55),cyl(.2,.2,0xf1c9a5,1.2),cyl(.38,.05,0xe8d9b0,1.35),bm(.4,.5,.2,0xe8d9b0,.4,.6,0));wk.visible=false;S.add(wk);
+const mowG=new THREE.Group(),mw=new THREE.Group(),gB=[],gg=new THREE.BoxGeometry(.1,.1,.1),gmM=new THREE.MeshLambertMaterial({color:0x8fd18a}),pS=c=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(1.4,1),new THREE.MeshLambertMaterial({color:c}));m.rotation.x=-Math.PI/2;return m},LX=[-6,-3,0,3,6],talls=[],cuts=[];LX.forEach(x=>{const t=pS(0x6fb35f),c=pS(0xd6f0c8);t.scale.y=18;t.position.set(x,.05,0);c.position.set(x,.06,0);c.scale.y=.001;talls.push(t);cuts.push(c)});
+mw.add(bm(.9,.4,1.2,0xe53935,0,.1,0),bm(1,.1,1.3,0x90a4ae,0,-.1,0),bm(.8,.06,.06,0x455a64,0,.9,-.9));[[-.5,-.5],[.5,-.5],[-.5,.5],[.5,.5]].forEach(a=>mw.add(bm(.12,.3,.3,0x263238,a[0],-.15,a[1])));
+mowG.add(...talls,...cuts,mw);mowG.visible=false;S.add(mowG);
+const rtw=()=>{if(!wk.visible)return rt();const a=trees.filter(t=>Math.abs(t.z-wk.position.z)<1.6&&Math.abs(t.x-wk.position.x)<2);return a.length?a[Math.random()*a.length|0]:rt()};
+let stn='',si=0,stt=0;
+const ct=new THREE.Group(),cf=[];ct.add(bm(1,.1,1.4,0x8d6e63,0,.45,0),bm(1,.3,.08,0x8d6e63,0,.62,.66),bm(1,.3,.08,0x8d6e63,0,.62,-.66),bm(.08,.3,1.3,0x8d6e63,.46,.62,0),bm(.08,.3,1.3,0x8d6e63,-.46,.62,0),bm(1.1,.12,.12,0x455a64,0,.2,.45),bm(1.1,.12,.12,0x455a64,0,.2,-.45));
+for(let i=0;i<30;i++){const f=new THREE.Mesh(gF,fM);f.position.set(-.3+(i%3)*.3,.62+Math.floor(i/9)*.12,-.5+(Math.floor(i/3)%3)*.5);f.visible=false;ct.add(f);cf.push(f)}
+ct.visible=false;S.add(ct);
+const MXp=new THREE.Vector3(9.5,0,8),tkM=new THREE.Mesh(new THREE.CylinderGeometry(.9,.9,2,20,1,true),new THREE.MeshLambertMaterial({color:0xffffff,transparent:true,opacity:.4,side:2})),lqG=new THREE.CylinderGeometry(.85,.85,1,20);lqG.translate(0,.5,0);
+const liqM=new THREE.MeshLambertMaterial({color:0x4aa8ff}),liq=new THREE.Mesh(lqG,liqM);tkM.position.set(MXp.x,1.15,MXp.z);liq.position.set(MXp.x,.15,MXp.z);liq.scale.y=.001;S.add(tkM,liq);
+bx(2,.15,2,0xe53935,MXp.x,.08,MXp.z);bx(.6,.5,.6,0xb0bec5,MXp.x-2,.25,MXp.z+.5);
+let mx3=0,mxS=0;const ch3=[],cg3=new THREE.BoxGeometry(.22,.22,.22);
+const chip3=c=>{const m=new THREE.Mesh(cg3,new THREE.MeshLambertMaterial({color:c}));m.position.set(MXp.x+(Math.random()-.5)*.8,3.6,MXp.z+(Math.random()-.5)*.8);S.add(m);ch3.push({m,t:0});liqM.color.lerp(new THREE.Color(c),.2)};
+/* drone */
+const drone=new THREE.Group(),rot=[];
+const bd=new THREE.Mesh(new THREE.BoxGeometry(.9,.25,.9),new THREE.MeshLambertMaterial({color:0xe53935}));drone.add(bd);
+const tk=new THREE.Mesh(new THREE.BoxGeometry(.6,.3,.6),new THREE.MeshLambertMaterial({color:0xeceff1}));tk.position.y=-.27;drone.add(tk);
+[[1,1],[1,-1],[-1,1],[-1,-1]].forEach(a=>{const r=new THREE.Mesh(new THREE.CylinderGeometry(.5,.5,.03,16),new THREE.MeshBasicMaterial({color:0x90caf9,transparent:true,opacity:.55}));r.position.set(a[0]*.85,.2,a[1]*.85);drone.add(r);rot.push(r)});
+drone.scale.setScalar(1.3);S.add(drone);
+/* warning sign + bees */
+const sign=new THREE.Group();const dsk=new THREE.Mesh(new THREE.CircleGeometry(.8,24),new THREE.MeshBasicMaterial({color:0xc62828,side:2}));dsk.position.y=2.6;
+const bar=new THREE.Mesh(new THREE.BoxGeometry(1.1,.2,.05),new THREE.MeshBasicMaterial({color:0xffffff}));bar.position.y=2.6;
+const post=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,2.6,6),sM);post.position.y=1.3;sign.add(dsk,bar,post);sign.position.set(6.6,0,5.5);S.add(sign);
+const bees=[];for(let i=0;i<10;i++){const b=new THREE.Mesh(new THREE.SphereGeometry(.12,6,5),new THREE.MeshBasicMaterial({color:0xffd600}));S.add(b);bees.push(b)}
+/* particles */
+function sys(n,size,col){const g=new THREE.BufferGeometry(),p=new Float32Array(n*3).fill(-99);g.setAttribute('position',new THREE.BufferAttribute(p,3));const m=new THREE.PointsMaterial({size,color:col,transparent:true,opacity:.92});const o=new THREE.Points(g,m);o.frustumCulled=false;S.add(o);return{m,p,g,n,v:new Float32Array(n*3),l:new Float32Array(n)}}
+function upd(s,dt,on,sp,gr,fl,stick){for(let i=0;i<s.n;i++){const k=i*3;if(s.l[i]<=0){if(on&&Math.random()<.2)sp(s,i,k);else{s.p[k+1]=-99;continue}}
+s.v[k+1]+=gr*dt;s.p[k]+=s.v[k]*dt;s.p[k+1]+=s.v[k+1]*dt;s.p[k+2]+=s.v[k+2]*dt;s.l[i]-=dt;
+if(s.p[k+1]<fl){if(stick){s.p[k+1]=fl;s.v[k]=s.v[k+1]=s.v[k+2]=0}else s.l[i]=0}}s.g.attributes.position.needsUpdate=true}
+const pel=sys(900,.16,0xf59e0b),wat=sys(700,.13,0x4aa8ff),mist=sys(800,.12,0x38bdf8);
+const rt=()=>trees[Math.random()*trees.length|0];
+const spP=(s,i,k)=>{const t=rtw(),a=Math.random()*6.28,v=.8+Math.random()*1.3;s.p[k]=t.x;s.p[k+1]=1.4;s.p[k+2]=t.z;s.v[k]=Math.cos(a)*v;s.v[k+1]=1.5+Math.random()*2;s.v[k+2]=Math.sin(a)*v;s.l[i]=3.5};
+const spW=(s,i,k)=>{const q=spr[Math.random()*spr.length|0],a=Math.random()*6.28;s.p[k]=q.x;s.p[k+1]=.2;s.p[k+2]=q.z;s.v[k]=Math.cos(a)*1.6;s.v[k+1]=4+Math.random()*1.5;s.v[k+2]=Math.sin(a)*1.6;s.l[i]=2};
+const spM=(s,i,k)=>{s.p[k]=drone.position.x+(Math.random()-.5)*1.6;s.p[k+1]=drone.position.y-.5;s.p[k+2]=drone.position.z+(Math.random()-.5)*1.6;s.v[k]=(Math.random()-.5)*.8;s.v[k+1]=-3;s.v[k+2]=(Math.random()-.5)*.8;s.l[i]=2};
+/* drone path: takeoff → center-line passes along 3 rows → landing */
+const P=[[8,.4,12],[4.5,5.5,11],[4.5,5.5,-11],[1.5,5.5,-11],[1.5,5.5,11],[-1.5,5.5,11],[-1.5,5.5,-11],[-4.5,5.5,-11],[-4.5,5.5,11],[8,.4,12]].map(a=>new THREE.Vector3(...a)),SG=[];let TL=0;
+for(let i=0;i<P.length-1;i++){const l=P[i].distanceTo(P[i+1]);SG.push(l);TL+=l}
+const SPD=4,DD=TL/SPD;
+function dpos(t){let s=Math.min(t*SPD,TL-.001);for(let i=0;i<SG.length;i++){if(s<=SG[i])return P[i].clone().lerp(P[i+1],s/SG[i]);s-=SG[i]}return P[P.length-1].clone()}
+/* month state */
+const CC=[0x8bc34a,0x66bb6a,0x43a047,0x388e3c,0x388e3c,0x2e7d32,0x2e7d32,0x2e7d32,0x2e7d32,0x2e7d32,0x2e7d32,0x2e7d32],
+FS=[0,0,0,0,0,0,.4,.7,.9,1.1,1.2,1.35],FC=[0,0,0,0,0,0,0x6fbf4a,0x6fbf4a,0x8ccf4a,0xc9d65a,0xe3b94a,0xd9a21b];
+let ph=[],pi=0,pt=0;const KC={harvest:'#d9a21b',mow:'#e65100',soil:'#2e7d32',water:'#0288d1',drone:'#0277bd',dry:'#e65100',idle:'#546e7a'};
+function setChip(){const p=ph[pi],c=$('chip');c.style.background=KC[p.k];c.textContent=`${p.k=='harvest'?'🧺':p.k=='mow'?'✂️':p.k=='drone'?'🚁':p.k=='soil'?'🌱':p.k=='water'?'💧':p.k=='dry'?'☀️':'🍇'} ขั้นที่ ${pi+1}/${ph.length} · ${p.l}`}
+function setMonth(i){mi=i;const m=M[i];
+document.querySelectorAll('.mb').forEach((b,j)=>{b.classList.toggle('on',j==i);if(j==i)b.scrollIntoView({inline:'center',block:'nearest'})});
+cM.color.setHex(CC[i]);gm.color.setHex(m.dr?0xe6d3a8:0x9ad88a);
+trees.forEach(t=>{t.fl.forEach(f=>f.visible=i==5||i==6);t.fm.forEach(f=>{f.visible=i>=6;f.scale.setScalar(FS[i]||1)})});
+if(FC[i])fM.color.setHex(FC[i]);sign.visible=!!(m.bee||m.phi);bees.forEach(b=>b.visible=!!m.bee);
+pel.m.color.set(m.pc||'#f59e0b');
+const a=$('al');a.style.display=m.bee||m.phi?'inline-block':'none';a.style.background='#c62828';a.textContent=m.bee?'🐝 ห้ามพ่นสารเคมีช่วงดอกบาน — คุ้มครองผึ้ง':'⛔ PHI: หยุดพ่นสารเคมีทุกชนิด';
+ph=[{k:'mow',d:25,l:'ตัดหญ้า 1 ครั้ง/เดือน (ตัดทีละร่อง)'}];if(m.hv)ph.push({k:'harvest',d:25,l:'เก็บเกี่ยว เข็นลูกลำไยกลางร่องทีละร่อง'});if(m.so)ph.push({k:'soil',d:24,l:m.chem?'ราดสารทางดิน (โพแทสเซียมคลอเรต) รอบโคนต้น':'ใส่ปุ๋ยทางดินรอบโคนต้น'});
+if(m.so&&!m.dr)ph.push({k:'water',d:10,l:'รดน้ำละลายปุ๋ย (สปริงเกลอร์)'});
+if(m.r)ph.push({k:'drone',d:DD,l:`โดรน T25P พ่นทางใบ รอบที่ ${m.r}`});
+if(m.dr)ph.push({k:'dry',d:8,l:'กักน้ำ งดน้ำ 10-14 วัน (ดินแห้งแล้ง)'});
+if(!m.so&&!m.r&&!m.hv)ph.push({k:'idle',d:6,l:m.hv?'ผลสุกสีทอง พร้อมเก็บเกี่ยว งดปุ๋ย/สารเคมี':'พักต้น งดพ่นสารเคมี'});
+pi=0;pt=0;setChip();panel();acRender()}
+let last=performance.now();
+function loop(now){requestAnimationFrame(loop);const dt=Math.min((now-last)/1000,.05);last=now;
+if(stn&&SP[stn]){stt+=dt;if(stt>=SP[stn][si].d){stt=0;si=(si+1)%SP[stn].length;acRender()}}else if(!stn){pt+=dt;if(pt>=ph[pi].d){pt=0;pi=(pi+1)%ph.length;if(pi==0&&document.body.classList.contains('sm')&&slPlay)slGo((sI+1)%NS);else{setChip();acRender()}}}
+const k=stn?SP[stn][si].k:ph[pi].k;
+wk.visible=k=='soil'||k=='harvest';ct.visible=k=='harvest';
+if(k=='soil'){const u=pt/ph[pi].d,a=u<.5;wk.position.set(a?-3:3,0,a?9-36*u:-9+36*(u-.5));wk.rotation.y=a?Math.PI:0}
+if(k=='harvest'){const u=pt/5,l=Math.min(4,Math.floor(u)),f=u>=5?1:u-l,dz=l%2?1:-1,mz=l%2?-9+18*f:9-18*f,mx=LX[l];ct.position.set(mx,0,mz);ct.rotation.y=l%2?0:Math.PI;wk.position.set(mx,0,mz-dz*1.4);wk.rotation.y=l%2?0:Math.PI;const pr=Math.min(1,(l+f)/5);cf.forEach((c,i)=>c.visible=i<pr*30);if(pt<.2)trees.forEach(t=>t.fm.forEach(q=>q.visible=true));
+trees.forEach(t=>{let h=false;LX.forEach((x,j)=>{if(Math.abs(t.x-x)<2&&(j<l||(j==l&&(j%2?mz>=t.z:mz<=t.z))))h=true});if(h)t.fm.forEach(q=>q.visible=false)})}
+if(k=='mow'&&M[mi].hv)trees.forEach(t=>t.fm.forEach(q=>q.visible=true));
+mowG.visible=k=='mow';if(k=='mow'){const LT=5,u=pt/LT,l=Math.min(4,Math.floor(u)),f=u>=5?1:u-l,mz=l%2?-9+18*f:9-18*f,mx=LX[l];mw.position.set(mx,.3,mz);mw.rotation.y=l%2?0:Math.PI;cuts.forEach((c,j)=>{let len=0,cz=0;if(j<l){len=18}else if(j==l){len=Math.max(.001,18*f);cz=l%2?-9+9*f:9-9*f}c.scale.y=Math.max(.001,len);c.position.z=cz});if(k=='mow'&&gB.length<90)for(let q=0;q<2;q++){const m=new THREE.Mesh(gg,gmM);m.position.set(mx+(Math.random()-.5)*.9,.3,mz+(Math.random()-.5)*.9);S.add(m);gB.push({m,v:new THREE.Vector3((Math.random()-.5)*2.5,2+Math.random()*2,(Math.random()-.5)*2.5)})}}
+for(let i=gB.length-1;i>=0;i--){const g=gB[i];g.v.y-=9*dt;g.m.position.addScaledVector(g.v,dt);if(g.m.position.y<.06){S.remove(g.m);gB.splice(i,1)}}
+upd(pel,dt,k=='soil',spP,-9,.05,true);upd(wat,dt,k=='water',spW,-9,.05);
+let on=false;if(k=='drone'){const d=dpos(stn?stt:pt);drone.position.copy(d);on=d.y>5.2&&Math.abs(d.x)<=5&&Math.abs(d.z)<=10.5;rot.forEach(r=>r.rotation.y+=40*dt)}else{drone.position.copy(P[0]);drone.position.y=.35}
+upd(mist,dt,on,spM,-2.5,2.0);
+if(M[mi].bee)bees.forEach((b,i)=>{const t=trees[(i*3)%trees.length],a=now/500+i*1.7;b.position.set(t.x+Math.cos(a)*1.7,2.6+Math.sin(now/260+i)*.5,t.z+Math.sin(a)*1.7)});
+mxS+=(mx3-mxS)*.05;liq.scale.y=Math.max(.001,1.8*mxS);for(let i=ch3.length-1;i>=0;i--){const c=ch3[i];c.t+=dt;c.m.position.y=3.6-c.t*3.6;c.m.rotation.x+=dt*5;if(c.m.position.y<.15+1.8*mxS){S.remove(c.m);ch3.splice(i,1)}}
+az+=(azT-az)*.15;el+=(elT-el)*.15;tz+=(tzT-tz)*.12;tx+=(txT-tx)*.12;zoomK+=(zT-zoomK)*.15;dist=(innerWidth<768?34:26)*zoomK;cam.position.set(tx+Math.sin(az)*dist,dist*el,tz+Math.cos(az)*dist);cam.lookAt(tx,1,tz);R.render(S,cam)}
+const CAMS=['a','h','m','m','a','t','m','t','m','a','f','e','t','a','a'],NS=12;let sI=0,sT=null;
+function slHtml(i){
+if(i==0)return `<h2>🌳 แผนบำรุงสวนลำไย 5 ไร่ (~100 ต้น)</h2><ul><li>สูตรผลผลิตเกรด A: ทำใบ 2 รอบ ม.ค.-เม.ย.</li><li>ราดสารพฤษภาคม · เก็บเกี่ยว ธ.ค.-ม.ค.</li><li>พ่นทางใบด้วยโดรน T25P 7 รอบ/ปี</li></ul>`;
+if(i<=12){const m=M[i-1];return `<h2>${m.n} · ${m.t}</h2><ul>${m.so?`<li>🌱 ${m.so}</li>`:''}${m.r?`<li>🚁 รอบบินที่ ${m.r}: ${m.fo.slice(0,4).join(' · ')}</li>`:''}<li>💧 ${m.w}</li><li>⚠ ${m.wa[0]}</li></ul>`}
+if(i==13)return `<h2>🚁 ตั้งค่าโดรน T25P & ผสมสาร</h2><ul><li>30 ลิตร/ไร่ · สูง 2.5-3 ม. · 2.0-2.5 ม./วินาที · ละออง 150-200 ไมครอน</li><li>บินกึ่งกลางร่องแถวต้น</li><li>ผสม: น้ำครึ่งถัง → ปุ๋ยเกล็ด → ยาแมลง/โรค → ธาตุอาหารเสริม → น้ำครบ 150 ลิตร → สารจับใบสุดท้าย</li></ul>`;
+return `<h2>💰 งบประมาณ & จุดคุ้มทุน</h2><ul><li>ต้นทุนรวม 79,100 - 81,700 บ. (รวมค่าเช่า 35,000)</li><li>เฉลี่ย 15,820 - 16,340 บ./ไร่</li><li>คุ้มทุน: ขาย 30 บ./กก. ต้องได้ 2,637-2,723 กก. · ขาย 20 บ./กก. ต้องได้ 3,955-4,085 กก.</li><li>เป้าผลผลิต 5,500-7,500 กก.</li></ul>`}
+function slGo(i){sI=cl(i,0,NS-1);$('sb').innerHTML=slHtml(sI+1);$('sc').textContent=`${sI+1}/${NS}`;setMonth(sI)}
+let slPlay=true;function slAuto(on){slPlay=on;$('sa').textContent=on?'⏸':'⏯'}
+function slOpen(on){document.body.classList.toggle('sm',on);if(on){stn='';acHide()}if(on){slAuto(true);slGo(0)}else slAuto(false)}
+$('sp').onclick=()=>slGo(sI-1);$('sf').onclick=()=>slGo(sI+1);$('sx').onclick=()=>slOpen(false);
+function actGo(d){const n=pi+d;if(n>=ph.length)slGo((sI+1)%NS);else if(n<0){if(sI>0){slGo(sI-1);pi=ph.length-1}else pi=0;pt=0;setChip();acRender()}else{pi=n;pt=0;setChip();acRender()}}
+$('ka').onclick=()=>actGo(-1);$('kb').onclick=()=>actGo(1);$('ss').onclick=()=>{const q=$('sq');q.style.display=q.style.display=='none'?'flex':'none'};$('sa').onclick=()=>slAuto(!slPlay);
+addEventListener('keydown',e=>{if(document.body.classList.contains('sm')){if(e.key=='ArrowRight')slGo(sI+1);if(e.key=='ArrowLeft')slGo(sI-1)}});
+const STV={s:[.9,.45,2,.22,-3],w:[-.7,.4,2,.2,1.5],m:[.7,.5,0,.3,-3],d:[.3,.65,0,.5,3],x:VW.x,h:[1.2,.5,3,.25,3]},STN={s:'🌱 ใส่ปุ๋ยทางดิน',w:'💧 รดน้ำ',m:'✂️ ตัดหญ้า',d:'🚁 พ่นทางใบด้วยโดรน T25P',x:'🧪 ผสมสาร',h:'🍇 เก็บเกี่ยว'},STC={s:'#2e7d32',w:'#0288d1',m:'#e65100',d:'#0277bd',x:'#c62828',h:'#e65100'};
+const ul=a=>'<ul>'+a.map(x=>`<li>${x}</li>`).join('')+'</ul>';
+function acHide(){$('ac').style.display='none'}
+const SP={s:[{k:'idle',d:4,l:'เตรียมปุ๋ยใส่ถุง/กระสอบหว่าน'},{k:'soil',d:24,l:'เดินตามร่องแถว หว่านปุ๋ยรอบโคนต้นช้าๆ'},{k:'idle',d:4,l:'ตรวจว่าปุ๋ยกระจายรอบโคนต้นสม่ำเสมอ'},{k:'water',d:10,l:'รดน้ำให้ปุ๋ยละลายทันที'}],
+w:[{k:'idle',d:4,l:'ตรวจดินและหัวสปริงเกลอร์'},{k:'water',d:14,l:'เปิดน้ำ รดโชกให้ชุ่มถึงรากฝอย'},{k:'idle',d:4,l:'ปิดน้ำ ตรวจความชื้นดิน'}],
+m:[{k:'idle',d:4,l:'เตรียมรถตัดหญ้า ตรวจใบมีด'},{k:'mow',d:50,l:'ตัดทีละร่อง ครบทุกร่อง (5 ร่อง)'},{k:'idle',d:5,l:'ตรวจความเรียบร้อยของทุกร่อง'}],
+d:[{k:'idle',d:5,l:'ผสมสารลงถัง 150 ลิตร แล้วเติมถังโดรน 25 ลิตร'},{k:'drone',d:DD,l:'ขึ้นบิน พ่นกึ่งกลางร่องทีละแถว'},{k:'idle',d:5,l:'ลงจอดที่แท่น'}],
+h:[{k:'idle',d:5,l:'ตรวจความสุก: ผลโต ผิวตึง สีน้ำตาลทอง หวานกรอบ'},{k:'idle',d:5,l:'ลด/หยุดน้ำก่อนเก็บเกี่ยว 7-10 วัน เพื่อเพิ่มความหวาน'},{k:'idle',d:5,l:'ติดตาข่ายหรือไฟไล่ค้างคาว/นก 1-2 สัปดาห์ก่อนเก็บ'},{k:'idle',d:5,l:'งดปุ๋ยและสารเคมีทุกชนิด'}]};
+function acRender(){const q=$('sq'),I={harvest:'🧺',mow:'✂️',soil:'🌱',water:'💧',drone:'🚁',dry:'☀️',idle:'🍇'};q.innerHTML=ph.map((p,i)=>`<span class="tg" style="flex:none;white-space:nowrap;background:${i==pi?'#e65100':i<pi?'#2e7d32':'#78909c'}">${i+1}. ${I[p.k]} ${p.l}${i<pi?' ✓':''}</span>`).join('')}
+function acOld2(){const a=$('ac');if(!stn||!SP[stn]){a.style.display='none';return}const m=M[mi],info=stn=='s'?(m.so||'เดือนนี้ไม่มีการใส่ปุ๋ยทางดิน (อนิเมชันแสดงวิธีใส่ทั่วไป)')+' · รดน้ำตาม แล้วเว้น 3-5 วันจึงบินโดรน':stn=='w'?m.w:stn=='d'?(m.r?`รอบบินที่ ${m.r}: ${m.fo.join(' · ')}`:'เดือนนี้ไม่มีรอบบิน (แสดงเส้นทางบินตัวอย่าง)'):stn=='h'?M[11].wa.join(' · '):'ข้อมูลทั่วไป ไม่มีในแผนเดิม — บอกช่วงเวลาที่ทำจริงเพื่อเพิ่มลงปฏิทินได้';
+a.innerHTML=`<h2><span>${STN[stn]} · ${m.n}</span><button onclick="stOff()">✕</button></h2><ol class="sl" style="padding:0;margin:0">${SP[stn].map((p,i)=>`<li class="${i==si?'on':i<si?'dn':''}">${i+1}. ${p.l}</li>`).join('')}</ol><div class="bx o" style="margin:6px 0 0">${info}</div>`;a.style.display='block';const c=$('chip');c.style.background=STC[stn];c.textContent=`📍 ${STN[stn]} · ขั้นที่ ${si+1}/${SP[stn].length}`}
+function acOld(){const a=$('ac');const m=M[mi];let b;
+if(stn=='s')b=ul([m.so||'เดือนนี้ไม่มีการใส่ปุ๋ยทางดิน (อนิเมชันแสดงวิธีใส่โดยทั่วไป)','รดน้ำโชกทันทีหลังใส่ปุ๋ย แล้วเว้น 3-5 วันจึงบินโดรนพ่นทางใบ']);
+else if(stn=='w')b=ul([m.w,'หลังใส่ปุ๋ยให้รดน้ำจนดินชุ่มถึงรากฝอย']);
+else if(stn=='m')b=ul(['ตัดหญ้าตามร่องระหว่างแถวต้น','ข้อมูลทั่วไป ไม่มีในแผนเดิม — บอกช่วงเวลาที่ทำจริงเพื่อเพิ่มลงปฏิทินได้']);
+else if(stn=='d')b=m.r?ul([`รอบบินที่ ${m.r} · ${m.d}`,...m.fo]):ul(['เดือนนี้ไม่มีรอบบิน (แสดงเส้นทางบินตัวอย่าง)','30 ลิตร/ไร่ · สูง 2.5-3 ม. · 2.0-2.5 ม./วินาที · บินกึ่งกลางร่องแถว']);
+else b=ul(M[11].wa);
+a.innerHTML=`<h2><span>${STN[stn]} · ${m.n}</span><button onclick="stOff()">✕</button></h2>${b}`;a.style.display='block';
+const c=$('chip');c.style.background=STC[stn];c.textContent='📍 สถานี: '+STN[stn]}
+function stSel(k){stn=k=='x'?'':k;si=0;stt=0;slOpen(false);const i=k=='h'?11:k=='x'&&!M[mi].r?0:mi;
+if(k=='x'){tab=3;$('pn').classList.remove('min')}else{tab=0;[azT,elT,tzT,zT,txT=0]=STV[k];$('pn').classList.add('min')}setMonth(i)}
+function stOff(){stn='';acHide();setChip();[azT,elT,tzT,zT,txT=0]=VW.a}
+resize();setMonth(0);requestAnimationFrame(loop);
+</script></body></html>
